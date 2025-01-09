@@ -1,8 +1,15 @@
 const form = document.querySelector('#form');
 const taskInput = document.querySelector('#taskInput');
 const TasksList = document.querySelector('#tasksList');
+const EmptyList = document.querySelector('#emptyList');
 
-form.addEventListener('submit', function (event) {
+form.addEventListener('submit', addTask)
+
+TasksList.addEventListener('click', deleteTask)
+
+TasksList.addEventListener('click', doneTask)
+
+function addTask (event) {
     event.preventDefault();
 
     const taskText = taskInput.value;
@@ -27,6 +34,29 @@ form.addEventListener('submit', function (event) {
         </li>`;
 
     TasksList.insertAdjacentHTML('beforeend', taskHTML);
-
     taskInput.value = '';
-});
+    taskInput.focus();
+    if (TasksList.children.length > 1 ) {
+        EmptyList.classList.add('none');
+    }
+}
+
+function deleteTask (event) {
+
+    if (event.target.dataset.action === 'delete') {
+        event.target.closest('li').remove();
+    }
+
+    if (TasksList.children.length === 1 ) {
+        EmptyList.classList.remove('none');
+    }
+}
+
+function doneTask (event) {
+    if (event.target.dataset.action === 'done') {
+       const parentNode = event.target.closest('li');
+       const taskTitle= parentNode.querySelector('span');
+       taskTitle.classList.toggle('task-title--done');
+       console.log(taskTitle);
+    }
+}
